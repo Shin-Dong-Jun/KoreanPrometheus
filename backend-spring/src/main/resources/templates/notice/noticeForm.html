@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 작성</title>
+    <link rel="stylesheet" th:href="@{/css/noticeForm.css}">
+</head>
+<body>
+<div class="container">
+    <h1>공지사항 작성 페이지</h1>
+    <form id="frm" th:action="@{/write}" method="post">
+        <input type="hidden" name="id">
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" name="title" id="title" required>
+        </div>
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea name="content" id="content" rows="10" required></textarea>
+        </div>
+        <div class="form-group checkbox">
+            <input type="checkbox" id="noticeType">
+            <label for="noticeType">긴급공지사항</label>
+            <input type="hidden" id="noticeTypeHidden" name="noticeType" value="일반">
+        </div>
+        <div class="button-group">
+            <button type="submit" id="regBtn" class="btn btn-primary">등록</button>
+            <button type="button" id="listBtn" class="btn btn-secondary">목록</button>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/noticeForm.js}"></script>
+</body>
+</html>
+

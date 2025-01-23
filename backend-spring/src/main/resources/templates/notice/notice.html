@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 상세</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        .header-buttons {
+            background-color: #0f2661;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-back {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-delete-form button {
+            background-color: #001F3F;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-delete-form button:hover {
+            background-color: #00152A;
+        }
+
+        /* Content Styles */
+        .notice-detail {
+            padding: 2rem;
+        }
+
+        .notice-header {
+            margin-bottom: 2rem;
+        }
+
+        .notice-header h3 {
+            color: #333;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .notice-header p {
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #0f2661;
+            box-shadow: 0 0 0 2px rgba(0, 100, 0, 0.1);
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        input[readonly], textarea[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        /* Footer Styles */
+        .notice-footer {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .notice-footer button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        #editButton {
+            background-color: #0f2661;
+            color: white;
+        }
+
+        #editButton:hover {
+            background-color: #245bd5;
+        }
+
+        #submitButton {
+            background-color: #0f2661;
+            color: white;
+        }
+
+        #submitButton:hover {
+            background-color: #030d4c;
+        }
+
+        #cancelButton {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        #cancelButton:hover {
+            background-color: #d0d0d0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .notice-detail {
+                padding: 1rem;
+            }
+
+            .header-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-delete-form {
+                width: 100%;
+            }
+
+            .btn-delete-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-buttons">
+        <a href="/notice" class="btn-back">목록으로 돌아가기</a>
+<!--        <form class="btn-delete-form" th:action="@{/notice/{id}(id=${notice.id})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">-->
+<!--            <button type="submit">삭제</button>-->
+<!--        </form>-->
+    </div>
+    <div class="notice-detail">
+        <form th:action="@{/notice/edit/{id}(id=${notice.id})}" method="post" onsubmit="return validate()">
+            <input type="hidden" id="id" name="id" th:value="${notice.id}" />
+
+            <div class="notice-header">
+                <h3>제목</h3>
+                <input type="text" id="titleInput" name="title" th:value="${notice.title}" readonly />
+                <p>작성자: <span th:text="${notice.writer}">닉네임</span></p>
+                <p>작성일: <span th:text="${#dates.format(notice.regDate, 'yyyy.MM.dd HH:mm')}">작성일</span></p>
+            </div>
+            <div class="notice-content">
+                <h3>내용</h3>
+                <textarea id="contentInput" name="content" readonly th:text="${notice.content}"></textarea>
+            </div>
+<!--            <div class="notice-footer">-->
+<!--                <button type="button" id="editButton" onclick="enableEditing()">수정</button>-->
+<!--                <button type="submit" id="submitButton" class="hidden">수정 완료</button>-->
+<!--                <button type="button" id="cancelButton" class="hidden" onclick="cancelEditing()">취소</button>-->
+<!--            </div>-->
+        </form>
+    </div>
+</div>
+<script>
+    let originalTitle = "";
+    let originalContent = "";
+    let titleElem = "";
+    let contentElem = "";
+
+    window.onload = function() {
+        titleElem = document.getElementById("titleInput");
+        contentElem = document.getElementById("contentInput");
+        originalTitle = titleElem.value;
+        originalContent = contentElem.value;
+    };
+
+    function toggleEditing(isEditing) {
+        titleElem.readOnly = !isEditing;
+        contentElem.readOnly = !isEditing;
+        document.getElementById("submitButton").classList.toggle("hidden", !isEditing);
+        document.getElementById("cancelButton").classList.toggle("hidden", !isEditing);
+        document.getElementById("editButton").classList.toggle("hidden", isEditing);
+    }
+
+    function enableEditing() {
+        toggleEditing(true);
+    }
+
+    function cancelEditing() {
+        titleElem.value = originalTitle;
+        contentElem.value = originalContent;
+        toggleEditing(false);
+    }
+
+    function validate() {
+        const title = titleElem.value.trim();
+        const content = contentElem.value.trim();
+
+        if (!title) {
+            alert("제목을 입력하세요");
+            return false;
+        }
+        if (title.length > 100) {
+            alert("제목은 100자 이하로 입력하세요.");
+            return false;
+        }
+        if (!content) {
+            alert("내용을 입력하세요");
+            return false;
+        }
+        if (content.length > 500) {
+            alert("내용은 500자 이하로 입력하세요.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</body>
+</html>
