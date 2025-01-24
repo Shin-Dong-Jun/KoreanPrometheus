@@ -16,8 +16,7 @@ cp src/main/resources/application-local-template.yml src/main/resources/applicat
 
 # LLM기반 의류 추천 시스템
 
-## 스프링 - Java, Spring, Mysql
-
+## 스프링 - Java, Spring, Mysql(or MariaDB)
 ### 박영제 - 홈
 1. 메인페이지
 
@@ -34,17 +33,6 @@ cp src/main/resources/application-local-template.yml src/main/resources/applicat
 ### 김동민 - 상품
 1. 상품 등록
 2. 상품 관리 기능
-
-## 파이썬 - Python, Fastapi
-
-### 정수경 - 스크래핑
-1. 타사 스크래핑
-    1. 아이디 + 타입(상하의) + 성별 + 제품명 + 가격 + 색상 + 사이즈 + 소재 + 이미지주소 + URL
-    2. 행사(occasion)+ 스타일(style)
-
-### 박영제 - LLM
-1. LLM(Solar pro)
-2. RAG
 
 ---
 

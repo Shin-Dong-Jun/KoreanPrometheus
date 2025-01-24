@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM 의류 추천 시스템</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .container {
+      min-height: 100vh;
+      padding: 0 10%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 0 0;
+    }
+
+    .logo {
+      /*width: 60px;*/
+      /*height: 60px;*/
+      /*background-color: #E5E7EB;*/
+      /*display: flex;*/
+      /*align-items: center;*/
+      /*justify-content: center;*/
+      /*font-size: 0.875rem;*/
+    }
+
+    .logo-image {
+      width: 60px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .notice {
+      font-size: 1rem;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    .btn-ghost {
+      background: transparent;
+    }
+
+    .btn-ghost:hover {
+      background: transparent;
+    }
+
+    .btn-black {
+      background-color: #ff4a48;
+      color: white;
+      padding: 0.5rem 1rem;
+    }
+
+    .btn-black:hover {
+      background-color: #f5ae79;
+    }
+
+    .btn-outline {
+      border: 1px solid #E5E7EB;
+      background: transparent;
+      height: 48px;
+      flex: 1;
+    }
+
+    .btn-outline:hover {
+      border-color: #D1D5DB;
+    }
+
+    main {
+      flex-grow: 1;
+      display: flex;
+      margin-top: 2rem;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: normal;
+      color: #1a1a1a;
+      font-size: 42px;
+      font-weight: 700;
+    }
+    .sub-title {
+      margin-bottom: 3rem;
+      font-weight: 500;
+    }
+
+    .example-prompts {
+      width: 100%;
+      max-width: 768px;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-form {
+      width: 100%;
+      max-width: 768px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-text {
+      flex-grow: 1;
+      height: 48px;
+      padding: 0.5rem 1rem;
+      border: 1px solid #E5E7EB;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .recommendation {
+      width: 100%;
+      max-width: 768px;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #E5E7EB;
+      border-radius: 0.5rem;
+    }
+
+    .ad-section {
+      width: 200px;
+      height: 400px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ad-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: rotate(360deg) scale(0.5);
+    }
+
+    .fade-in {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">
+      <a href="/"><img class="logo-image" src="/img/kp.png"></a>
+    </div>
+    <div class="header-right">
+      <div class="auth-buttons">
+        <a href="/notice"><button class="btn btn-ghost">Notice</button></a>
+        <a href="/login"><button class="btn btn-ghost">Sign In</button></a>
+          <a href="/register"><button class="btn btn-black">Sign Up</button></a>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="content">
+      <h1 class="title">나만의 스타일리스트</h1>
+      <h3 class="sub-title">패션 추천 시스템</h3>
+      <form class="input-form" id="promptForm">
+        <div class="input-group">
+          <input type="text" class="input-text" id="promptInput" placeholder="의류 추천을 위한 프롬프트를 입력하세요...">
+          <input type="hidden" id="gender" value="female">
+          <button type="submit" class="btn btn-black" style="width: 112px;">추천받기</button>
+        </div>
+      </form>
+      <div class="example-prompts" id="examplePrompts">
+        <!-- JavaScript will populate this -->
+      </div>
+      <div class="recommendation" id="recommendation" style="display: none;">
+        <!-- JavaScript will populate this -->
+      </div>
+    </div>
+    <div class="ad-section">
+      <a id="ad-link" href="https://spao.com/" target="_blank">
+        <img id="ad-img" class="ad-image fade-in" src="https://spao.com/web/upload/category/shop1_5759_top_873043.png" alt="광고 이미지">
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  const ads = [
+    { img: "https://spao.com/web/upload/category/shop1_5759_top_873043.png", url: "https://spao.com/" },
+    { img: "https://spao.com/web/upload/free_design/20250110/20250122_luckybox_pc.jpg", url: "https://spao.com/" },
+    { img: "/img/spao3.png", url: "https://spao.com/" },
+  ];
+
+  let currentIndex = 0;
+  const adImg = document.getElementById("ad-img");
+  const adLink = document.getElementById("ad-link");
+
+  function changeAd() {
+    adImg.classList.remove("fade-in");
+    adImg.classList.add("fade-out");
+
+    setTimeout(() => {
+      currentIndex = (currentIndex + 1) % ads.length;
+      adImg.src = ads[currentIndex].img;
+      adLink.href = ads[currentIndex].url;
+
+      adImg.classList.remove("fade-out");
+      adImg.classList.add("fade-in");
+    }, 1000);
+  }
+
+  setInterval(changeAd, 5000); // 3초마다 광고 변경
+
+  const examplePrompts = [
+    "결혼식에 입고 갈 옷을 추천해 줘",
+    "여름 해변 여행용 옷을 추천해 줘",
+    "회사 면접용 정장을 추천해 줘"
+  ];
+
+  // Populate example prompts
+  const promptsContainer = document.getElementById('examplePrompts');
+  examplePrompts.forEach(prompt => {
+    const button = document.createElement('button');
+    button.className = 'btn btn-outline';
+    button.textContent = prompt;
+    button.onclick = () => {
+      document.getElementById('promptInput').value = prompt;
+    };
+    promptsContainer.appendChild(button);
+  });
+
+  // 쿠키에서 특정 값을 가져오는 함수
+  function getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (let cookie of cookies) {
+      const [key, value] = cookie.split("=");
+      if (key === name) return value;
+    }
+    return null;
+  }
+
+  // Handle form submission
+  document.getElementById('promptForm').onsubmit = async (e) => {
+    e.preventDefault();
+
+    const session = getCookie("session"); // 'session' 쿠키 값 가져오기
+
+    if (!session) {
+      alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+      window.location.href = "/login"; // 🚀 로그인 페이지로 리다이렉트
+      return;
+    }
+
+    const form = document.getElementById('promptForm');
+    const promptInputValue = document.getElementById('promptInput').value.trim();
+
+    if (!promptInputValue) {
+      alert("프롬프트를 입력하세요.");
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.append("gender", document.getElementById("gender").value);
+    formData.append("promptInput", promptInputValue);
+
+    const jsonObject = Object.fromEntries(formData.entries());
+    const recommendationDiv = document.getElementById('recommendation');
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonObject)
+      });
+
+      if (!response.ok) {
+        throw new Error("서버 응답이 올바르지 않습니다.");
+      }
+
+      const data = await response.json();
+      console.log('Raw Response:', data);
+
+      // ✅ JSON 데이터 파싱
+      let responseData;
+      try {
+        responseData = typeof data.response === "string" ? JSON.parse(data.response) : data.response;
+        console.log("Parsed Response Data:", responseData);
+      } catch (error) {
+        console.error("JSON Parsing Error:", error);
+        recommendationDiv.textContent = "JSON 데이터 변환 오류";
+        return;
+      }
+
+      const recommendations = responseData.recommendation || responseData.recommendations;
+
+      if (!recommendations || recommendations.length === 0) {
+        throw new Error("추천 결과 없음");
+      }
+
+      // 🛠 기존 추천 결과 초기화
+      recommendationDiv.innerHTML = "";
+
+      // 🛠 추천 상품 리스트를 HTML로 변환하여 추가
+      recommendations.forEach(item => {
+        const itemHTML = `
+                <div class="recommendation-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                    <img src="${item.image}" alt="${item.title}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
+                    <div>
+                        <h3 style="margin: 5px 0;">${item.title}</h3>
+                        <p><strong>가격:</strong> ${item.price.toLocaleString()}원</p>
+                        <p><strong>색상:</strong> ${item.color}</p>
+                        <p><strong>사이즈:</strong> ${item.size}</p>
+                        <p><strong>소재:</strong> ${item.material}</p>
+                        <p><strong>추천 이유:</strong> ${item.reason}</p>
+                        <a href="${item.url}" target="_blank" style="display: inline-block; padding: 5px 10px; background: black; color: white; text-decoration: none; border-radius: 5px; margin-top: 5px;" target='_blank'>상품 보기</a>
+                    </div>
+                </div>
+            `;
+        recommendationDiv.innerHTML += itemHTML;
+      });
+
+      // 🛠 추천 결과를 화면에 표시
+      recommendationDiv.style.display = 'block';
+
+    } catch (error) {
+      console.error('Error:', error);
+      recommendationDiv.innerHTML = '<p>추천 결과를 불러올 수 없습니다.</p>';
+      recommendationDiv.style.display = 'block';
+    }
+  };
+
+</script>
+</body>
+</html>

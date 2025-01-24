@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/prod_db
+    username: prod_user
+    password: prod_pass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  application:
+    name: prometheus-prod
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    org:
+      springframework: INFO
+
+# swagger 사용여부(false)
+springdoc:
+  swagger-ui:
+    enabled: false
