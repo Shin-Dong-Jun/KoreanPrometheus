@@ -9,6 +9,7 @@ app = FastAPI()
 
 # 허용할 출처(origin) 리스트
 origins = [
+    "http://localhost",  # 프론트엔드 개발 환경
     "http://localhost:8080",  # 프론트엔드 개발 환경
 ]
 
