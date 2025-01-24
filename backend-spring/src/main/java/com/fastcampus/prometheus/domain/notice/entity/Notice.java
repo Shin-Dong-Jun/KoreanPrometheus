@@ -29,7 +29,7 @@ public class Notice {
     private String content;
 
     //@ManyToOne
-    @Column(nullable = false)
+    @Column
     private Long writer;
 
     @Column(name = "notice_type")

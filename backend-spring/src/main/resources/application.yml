@@ -3,4 +3,4 @@ spring:
     active: local # local 작성 후 본인 DB 적용(README.md 참고)
 
 server:
-  port: 80
+  port: 8080

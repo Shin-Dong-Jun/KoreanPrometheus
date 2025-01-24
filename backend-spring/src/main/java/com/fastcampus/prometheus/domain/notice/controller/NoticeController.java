@@ -65,7 +65,7 @@ public class NoticeController {
 
 
     // 공지사항 수정 처리
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public String updateNotice(@PathVariable Long id, @ModelAttribute NoticeRequestDto noticeRequestDto) {
         try {
             noticeService.updateNotice(id, noticeRequestDto);
@@ -84,7 +84,7 @@ public class NoticeController {
         return "notice/noticeDelete";
     }
     // 공지사항 삭제
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteNotice(@RequestParam List<Long> id) {
             noticeService.deleteNotice(id);
             return "redirect:/notice";
