@@ -368,9 +368,27 @@
     promptsContainer.appendChild(button);
   });
 
+  // 쿠키에서 특정 값을 가져오는 함수
+  function getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (let cookie of cookies) {
+      const [key, value] = cookie.split("=");
+      if (key === name) return value;
+    }
+    return null;
+  }
+
   // Handle form submission
   document.getElementById('promptForm').onsubmit = async (e) => {
     e.preventDefault();
+
+    const session = getCookie("session"); // 'session' 쿠키 값 가져오기
+
+    if (!session) {
+      alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+      window.location.href = "/login"; // 🚀 로그인 페이지로 리다이렉트
+      return;
+    }
 
     const form = document.getElementById('promptForm');
     const promptInputValue = document.getElementById('promptInput').value.trim();
