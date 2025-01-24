@@ -25,21 +25,19 @@
 
     header {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
       padding: 2rem 0 0;
-      gap: 500px;
     }
 
-    footer {
-      width: 100%;
-      text-align: center;
-      padding: 20px;
-      background-color: #f8f8f8;
-      color: #666;
-      font-size: 14px;
-      margin-top: 30px;
-      border-top: 1px solid #ddd;
+    .logo {
+      /*width: 60px;*/
+      /*height: 60px;*/
+      /*background-color: #E5E7EB;*/
+      /*display: flex;*/
+      /*align-items: center;*/
+      /*justify-content: center;*/
+      /*font-size: 0.875rem;*/
     }
 
     .logo-image {
@@ -162,65 +160,6 @@
       border-radius: 0.5rem;
     }
 
-    .recommendation-item {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      background: white;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease-in-out;
-    }
-
-    .recommendation-item:hover {
-      transform: translateY(-5px);
-    }
-
-    .product-image {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    .product-info {
-      flex: 1;
-    }
-
-    .product-info h3 {
-      margin: 0;
-      font-size: 18px;
-      color: #333;
-    }
-
-    .product-info p {
-      margin: 5px 0;
-      font-size: 14px;
-      color: #666;
-    }
-
-    .recommendation-reason {
-      font-style: italic;
-      color: #444;
-    }
-
-    .view-product {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 15px;
-      background-color: black;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-
-    .view-product:hover {
-      background-color: #333;
-    }
-
     .ad-section {
       width: 200px;
       height: 400px;
@@ -245,54 +184,22 @@
       opacity: 1;
       transform: rotate(0deg) scale(1);
     }
-
-    /* 전체 화면 덮는 반투명 레이어 */
-    #loading-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
-      backdrop-filter: blur(5px); /* 블러 효과 */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000; /* 다른 요소보다 위 */
-    }
-
-    /* 로딩 스피너 */
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(255, 255, 255, 0.3);
-      border-top: 5px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    /* 스피너 애니메이션 */
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
   </style>
 </head>
 <body>
-<header>
-  <div class="logo">
-    <a href="/"><img class="logo-image" src="/img/kp.png"></a>
-  </div>
-  <div class="header-right">
-    <div class="auth-buttons">
-      <a href="/notice"><button class="btn btn-ghost">Notice</button></a>
-      <a href="/login"><button class="btn btn-ghost">Sign In</button></a>
-      <a href="/register"><button class="btn btn-black">Sign Up</button></a>
-    </div>
-  </div>
-</header>
 <div class="container">
+  <header>
+    <div class="logo">
+      <a href="/"><img class="logo-image" src="/img/kp.png"></a>
+    </div>
+    <div class="header-right">
+      <div class="auth-buttons">
+        <a href="/notice"><button class="btn btn-ghost">Notice</button></a>
+        <a href="/login"><button class="btn btn-ghost">Sign In</button></a>
+          <a href="/register"><button class="btn btn-black">Sign Up</button></a>
+      </div>
+    </div>
+  </header>
   <main>
     <div class="content">
       <h1 class="title">나만의 스타일리스트</h1>
@@ -301,7 +208,7 @@
         <div class="input-group">
           <input type="text" class="input-text" id="promptInput" placeholder="의류 추천을 위한 프롬프트를 입력하세요...">
           <input type="hidden" id="gender" value="female">
-          <button type="submit" class="btn recommendation-button btn-black" style="width: 112px;">추천받기</button>
+          <button type="submit" class="btn btn-black" style="width: 112px;">추천받기</button>
         </div>
       </form>
       <div class="example-prompts" id="examplePrompts">
@@ -318,9 +225,6 @@
     </div>
   </main>
 </div>
-<footer class="footer">
-  <p>&copy; 2025 LLM 의류 추천 시스템. All rights reserved.</p>
-</footer>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -374,18 +278,11 @@
 
     const form = document.getElementById('promptForm');
     const promptInputValue = document.getElementById('promptInput').value.trim();
-    const recommendButton = document.querySelector(".recommendation-button");
-    const loadingOverlay = document.getElementById("loading-overlay"); // 로딩 레이어
 
     if (!promptInputValue) {
       alert("프롬프트를 입력하세요.");
       return;
     }
-
-    // 🔒 버튼 비활성화 & 로딩 레이어 표시
-    recommendButton.disabled = true;
-    recommendButton.textContent = "추천 중..."; // 로딩 상태 표
-    loadingOverlay.style.display = "flex"; // 로딩 레이어 활성화
 
     const formData = new FormData(form);
     formData.append("gender", document.getElementById("gender").value);
@@ -397,7 +294,9 @@
     try {
       const response = await fetch('http://127.0.0.1:8000/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(jsonObject)
       });
 
@@ -430,21 +329,20 @@
 
       // 🛠 추천 상품 리스트를 HTML로 변환하여 추가
       recommendations.forEach(item => {
-        // language=HTML
         const itemHTML = `
-                <a href="${item.url}" style="text-decoration:none;" target="_blank">
-                  <div class="recommendation-item">
-                    <img src="${item.image}" alt="${item.title}" class="product-image">
-                    <div class="product-info">
-                        <h3>${item.title}</h3>
+                <div class="recommendation-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                    <img src="${item.image}" alt="${item.title}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
+                    <div>
+                        <h3 style="margin: 5px 0;">${item.title}</h3>
                         <p><strong>가격:</strong> ${item.price.toLocaleString()}원</p>
                         <p><strong>색상:</strong> ${item.color}</p>
                         <p><strong>사이즈:</strong> ${item.size}</p>
                         <p><strong>소재:</strong> ${item.material}</p>
-                        <p class="recommendation-reason"><strong>추천 이유:</strong> ${item.reason}</p>
+                        <p><strong>추천 이유:</strong> ${item.reason}</p>
+                        <a href="${item.url}" target="_blank" style="display: inline-block; padding: 5px 10px; background: black; color: white; text-decoration: none; border-radius: 5px; margin-top: 5px;" target='_blank'>상품 보기</a>
                     </div>
-                  </div>
-                </a>`;
+                </div>
+            `;
         recommendationDiv.innerHTML += itemHTML;
       });
 
@@ -455,17 +353,9 @@
       console.error('Error:', error);
       recommendationDiv.innerHTML = '<p>추천 결과를 불러올 수 없습니다.</p>';
       recommendationDiv.style.display = 'block';
-    } finally {
-      // ✅ 버튼 다시 활성화
-      recommendButton.disabled = false;
-      recommendButton.textContent = "추천받기";
-      loadingOverlay.style.display = "none"; // 로딩 레이어 숨기기
     }
   };
 
 </script>
-<div id="loading-overlay" style="display: none;">
-  <div class="loading-spinner"></div>
-</div>
 </body>
 </html>

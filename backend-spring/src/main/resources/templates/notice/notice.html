@@ -4,176 +4,211 @@
     <meta charset="UTF-8">
     <title>공지사항 상세</title>
     <style>
-        /* Base Styles */
+        /* Global Styles */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 2rem;
-            line-height: 1.5;
+            padding: 0;
+            background-color: #f4f4f4;
         }
 
         .container {
+            position: relative;
+            width: 80%;
             max-width: 800px;
             margin: 0 auto;
-            background: white;
+            padding: 30px; /* Padding 증가 */
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            margin-top: 40px;
         }
 
-        /* Header Styles */
-        .header-buttons {
-            background-color: #0f2661;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-back {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: background-color 0.2s;
-        }
-
-        .btn-back:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-delete-form button {
-            background-color: #001F3F;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-delete-form button:hover {
-            background-color: #00152A;
-        }
-
-        /* Content Styles */
-        .notice-detail {
-            padding: 2rem;
-        }
-
-        .notice-header {
-            margin-bottom: 2rem;
-        }
-
-        .notice-header h3 {
+        h1 {
+            text-align: center;
+            font-size: 2.4rem; /* 글자 크기 증가 */
             color: #333;
-            margin: 0 0 0.5rem 0;
+            margin-bottom: 30px;
         }
 
-        .notice-header p {
-            color: #666;
-            margin: 0.5rem 0;
+        h3 {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 10px;
         }
 
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin: 0.5rem 0;
-            font-size: 1rem;
-            transition: border-color 0.2s;
+        .form-group {
+            margin-bottom: 25px; /* 간격 증가 */
         }
 
-        input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: #0f2661;
-            box-shadow: 0 0 0 2px rgba(0, 100, 0, 0.1);
+        label {
+            display: block;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
         }
 
+        input[type="text"],
         textarea {
-            min-height: 200px;
-            resize: vertical;
+            width: 100%;
+            padding: 14px; /* 패딩 증가 */
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
         }
 
         input[readonly], textarea[readonly] {
-            background-color: #f5f5f5;
+            background-color: #f2f2f2;
             cursor: not-allowed;
         }
 
-        /* Footer Styles */
-        .notice-footer {
-            margin-top: 2rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #e6362b;
         }
 
-        .notice-footer button {
-            padding: 0.5rem 1rem;
+        textarea {
+            height: 250px; /* 텍스트 영역 높이 증가 */
+            resize: none;
+            overflow-y: auto;
+        }
+
+        input[type="text"] {
+            height: 50px; /* 입력란 높이 증가 */
+        }
+
+        /* Button Styles */
+        .submit-btn {
+            padding: 14px 20px; /* 버튼 패딩 증가 */
+            background-color: #e6362b;
+            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 0.875rem;
-            transition: all 0.2s;
+            transition: background-color 0.3s ease;
+            width: 100%;
         }
 
-        #editButton {
-            background-color: #0f2661;
+        .submit-btn:hover {
+            background-color: #e6362b;
+        }
+
+        button[type="button"] {
+            border: 1px solid #aaa;
+            background-color: white;
+            color: #aaa;
+        }
+
+        button[type="button"]:hover {
+            border: 1px solid black;
+            background-color: white;
+            color: black;
+        }
+
+        button[type="submit"] {
+            background-color: #f44336;
             color: white;
         }
 
-        #editButton:hover {
-            background-color: #245bd5;
+        button[type="submit"]:hover {
+            background-color: #e6362b;
         }
 
-        #submitButton {
-            background-color: #0f2661;
+        button[style="display: none;"] {
+            display: none;
+        }
+
+        /* Header Buttons */
+        .header-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .btn-back {
+            padding: 12px 24px; /* 버튼 크기 증가 */
+            background-color: white;
+            color: #e6362b;
+            text-decoration: none;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: white;
+            border: 1px solid black;
+        }
+
+        .btn-delete-form button {
+            background-color: #f44336;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-delete-form button:hover {
+            background-color: #e6362b;
+        }
+
+        /* Footer Styles */
+        .help-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        button#submitButton {
+            border: none;
+            background-color: #e6362b;
             color: white;
         }
 
-        #submitButton:hover {
-            background-color: #030d4c;
+        button#submitButton:hover {
+            background-color: #e6362b;
         }
 
-        #cancelButton {
-            background-color: #e0e0e0;
-            color: #333;
+        button[type="submit"], button[type="button"], .btn-delete {
+            padding: 14px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
         }
 
-        #cancelButton:hover {
-            background-color: #d0d0d0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Responsive Design */
+        /* Responsive Styles */
         @media (max-width: 768px) {
-            body {
-                padding: 1rem;
+            .container {
+                width: 90%;
+                padding: 20px;
             }
 
-            .notice-detail {
-                padding: 1rem;
+            h1 {
+                font-size: 2rem;
             }
 
-            .header-buttons {
-                flex-direction: column;
-                gap: 1rem;
+            h3 {
+                font-size: 1.2rem;
             }
 
-            .btn-delete-form {
-                width: 100%;
+            input[type="text"], textarea {
+                font-size: 1rem;
             }
 
-            .btn-delete-form button {
-                width: 100%;
+            .submit-btn {
+                font-size: 1rem;
             }
         }
+
     </style>
 </head>
 <body>
