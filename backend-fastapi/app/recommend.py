@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 import json, os
-file_path = "/Users/pyj/Downloads/LLM/spao_woman2.json"
+file_path = "../resources/spao_woman2.json"
 
 if os.path.exists(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
